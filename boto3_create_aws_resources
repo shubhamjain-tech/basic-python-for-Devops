@@ -1,0 +1,41 @@
+import boto3
+
+# s3 bucket creation
+# ---------------------------------------------------------------------
+# client = boto3.client('s3')
+# # creating a simple s3 bucket
+# response = client.create_bucket(
+#     Bucket='shubham-demo-boto3-bucket-123',
+# )
+
+# -------------------------------------------------------------------------------
+
+
+# Ec2-instance creation 
+# -----------------------------------------------------------------------------------
+
+# Create an EC2 client
+ec2_client = boto3.client('ec2', region_name='ap-south-1')  # Replace 'your-region' with the desired region (e.g., 'us-east-1')
+
+# Create an EC2 instance
+response = ec2_client.run_instances(
+    ImageId='ami-078264b8ba71bc45e',  # Example: Replace with the desired AMI ID (Amazon Machine Image)
+    InstanceType='t2.micro',           # Replace with desired instance type
+    MinCount=1,                        # Minimum number of instances to launch
+    MaxCount=1,                        # Maximum number of instances to launch
+    # KeyName='your-key-pair-name',       # Replace with your EC2 Key Pair name
+    TagSpecifications=[
+        {
+            'ResourceType': 'instance',
+            'Tags': [
+                {'Key': 'Name', 'Value': 'MyBoto3Instance'}  # Tag to name your instance
+            ]
+        }
+    ]
+)
+
+# Print the instance details
+for instance in response['Instances']:
+    print(f"EC2 Instance ID: {instance['InstanceId']}")
+
+print("EC2 instance created successfully!")
